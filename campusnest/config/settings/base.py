@@ -50,7 +50,7 @@ LOCALE_PATHS = [str(BASE_DIR / "locale")]
 DATABASES = {
     "default": env.db(
         "DATABASE_URL",
-        default="postgres:///campusnest",
+        default="postgres:///cp2",
     ),
 }
 DATABASES["default"]["ATOMIC_REQUESTS"] = True

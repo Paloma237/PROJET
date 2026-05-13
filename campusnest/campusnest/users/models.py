@@ -1,39 +1,78 @@
 
 from typing import ClassVar
+from django.db import models
 
 from django.contrib.auth.models import AbstractUser
-from django.db.models import CharField
-from django.db.models import EmailField
 from django.urls import reverse
 from django.utils.translation import gettext_lazy as _
 
+from campusnest.global_data.enums import ROLE_CHOICES
+from campusnest.core.models import BaseModel
+
 from .managers import UserManager
 
-
-class User(AbstractUser):
+class User(AbstractUser, BaseModel):
     """
-    Default custom user model for campusnest.
-    If adding fields that need to be filled at user signup,
-    check forms.SignupForm and forms.SocialSignupForms accordingly.
+    Custom user model with additional fields for CampusNest.
     """
-
-    # First and last name do not cover name patterns around the globe
-    name = CharField(_("Name of User"), blank=True, max_length=255)
-    first_name = None  # type: ignore[assignment]
-    last_name = None  # type: ignore[assignment]
-    email = EmailField(_("email address"), unique=True)
-    username = None  # type: ignore[assignment]
-
-    USERNAME_FIELD = "email"
-    REQUIRED_FIELDS = []
-
+    role = models.CharField(
+        max_length=20,
+        choices=ROLE_CHOICES.choices,
+        default=ROLE_CHOICES.CLIENT,
+        verbose_name="Rôle",
+        help_text="Rôle de l'utilisateur dans l'application"
+    )
+    email = models.EmailField(unique=True)
+    telephone = models.CharField(max_length=20, blank=True, null=True)
+    first_name = models.CharField(max_length=200, blank=True, null=True)
+    last_name = models.CharField(max_length=200, blank=True, null=True)
+    photo_profil = models.ImageField(upload_to='profils/', blank=True, null=True)
+    
     objects: ClassVar[UserManager] = UserManager()
 
-    def get_absolute_url(self) -> str:
-        """Get URL for user's detail view.
+    USERNAME_FIELD = 'email'
+    REQUIRED_FIELDS = []
 
-        Returns:
-            str: URL for user detail.
+    def __str__(self):
+        return f"{self.email} ({self.get_role_display()})"
 
-        """
-        return reverse("users:detail", kwargs={"pk": self.id})
+    def est_client(self):
+        return self.role == ROLE_CHOICES.CLIENT
+
+    def est_proprietaire(self):
+        return self.role == ROLE_CHOICES.PROPRIETAIRE
+    
+    def save(self, *args, **kwargs):
+        # Les superusers sont toujours admin
+        if self.is_superuser:
+            self.role = 'admin'
+            self.is_staff = True
+        super().save(*args, **kwargs)
+    
+    @property
+    def is_admin(self):
+        """Propriété pour vérifier si l'utilisateur est admin"""
+        return self.role == 'admin' or self.is_superuser
+    
+    def has_admin_access(self):
+        """Vérifie l'accès à l'interface admin Django"""
+        return self.is_superuser or self.role == 'admin'
+
+
+class Client(BaseModel):
+    utilisateur = models.OneToOneField(User, on_delete=models.CASCADE, related_name='profil_client')
+    filiere = models.CharField(max_length=100, blank=True, null=True)
+    niveau = models.CharField(max_length=20, blank=True, null=True)
+    universite = models.CharField(max_length=150, default='IUT-FV Bandjoun')
+
+    def __str__(self):
+        return f"Étudiant : {self.User.email}"
+
+
+class Proprietaire(BaseModel):
+    utilisateur = models.OneToOneField(User, on_delete=models.CASCADE, related_name='profil_proprietaire')
+    piece_identite = models.FileField(upload_to='pieces_identite/', blank=True, null=True)
+    verifie = models.BooleanField(default=False)
+
+    def __str__(self):
+        return f"Propriétaire : {self.User.get_full_name()}"
