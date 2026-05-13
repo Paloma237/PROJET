@@ -1,0 +1,180 @@
+<!DOCTYPE html>
+<html lang="fr">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>utilisation de TAILWIND</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+
+<body class="bg-gray-100 ">
+    <header class="flex items-center sticky top-0 justify-between px-10 py-4 bg-white shadow-sm">
+        <div class="text-xl font-bold">PALOMA</div>
+
+        <nav class="hidden md:flex space-x-8 items-center">
+            <a href="#" class="hover:text-blue-600 transition">Home</a>
+            <a href="#" class="hover:text-blue-600 transition">Online Go Compiler</a>
+            <div class="cursor-pointer">mes passions
+                <select name="passions" id="">
+                    <option value="manger">manger</option>
+                    <option value="">designer</option>
+                </select><span class="text-[10px]"></span>
+            </div>
+            <div class="cursor-pointer">Blog <span class="text-[10px]">▼</span></div>
+        </nav>
+        <div class="text-xl cursor-pointer">☼</div>
+    </header>
+    <div class=" relative bg-blue-700 flex items-center justify-between ">
+        <main class="max-w-7xl mx-auto py-16 px-6">
+
+            <div class="m-10 text-white">
+                <h1 class="text-4xl font-extrabold text-center "><u>Bienvenue dans notre suppermarché</u></h1>
+                <p class="text-4xl  text-center "> bien vouloir choisir vos produits</p>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+                <div
+                    class="bg-gray-300 p-8 rounded-2xl shadow-sm border border-white flex flex-col items-start transition-shadow hover:shadow-md">
+
+                    <h2 class="text-xl font-bold mb-3">riz blanc</h2>
+                    <label for=""> unité de mesure:</label>
+                    <select id="mesure-blanc" name="unité de mesure">
+                        <option value="1kg">1kg</option>
+                        <option value="5kg">5kg</option>
+                        <option value="25kg">25kg</option>
+                        <option value="50kg">50kg</option>
+                    </select><br>
+                    <label for="">quantité </label>
+                    <input id="qte-blanc" type="number" min="1" class="border-gray-300">
+                    <div class="mt-10 p-6 bg-blue-900 text-white rounded-lg text-center">
+                        <button onclick="calculerProduit('blanc')"
+                            class="bg-[#0066FF] text-white px-6 py-2.5 rounded-full font-semibold hover:bg-blue-700 transition-colors">
+                            Acheter
+                        </button>
+                        <h3 class="text-2xl">Total de votre commande : <span id="prix-total-blanc">0</span> FCFA</h3>
+                    </div>
+                </div>
+
+                <div
+                    class="bg-gray-300 p-8 rounded-2xl shadow-sm border border-white flex flex-col items-start transition-shadow hover:shadow-md">
+
+                    <h2 class="text-xl font-bold mb-3">riz parfumé</h2>
+                    <label for=""> unité de mesure:</label>
+                    <select id="mesure-parfume" name="unité de mesure">
+                        <option value="1kg">1kg</option>
+                        <option value="5kg">5kg</option>
+                        <option value="25kg">25kg</option>
+                        <option value="50kg">50kg</option>
+                    </select><br>
+                    <label for="">quantité </label>
+                    <input id="qte-parfume" type="number" min="1" class="border-gray-300">
+                    <div class="mt-10 p-6 bg-blue-900 text-white rounded-lg text-center">
+                        <button onclick="calculerProduit('parfume')"
+                            class="bg-[#0066FF] text-white px-6 py-2.5 rounded-full font-semibold hover:bg-blue-700 transition-colors">
+                            Acheter
+                        </button>
+                        <h3 class="text-2xl">Total de votre commande : <span id="prix-total-parfume">0</span> FCFA</h3>
+                    </div>
+                </div>
+
+                <div
+                    class="bg-gray-300 p-8 rounded-2xl shadow-sm border border-white flex flex-col items-start transition-shadow hover:shadow-md">
+
+                    <h2 class="text-xl font-bold mb-3">riz long grain</h2>
+                    <label for=""> unité de mesure:</label>
+                    <select id="mesure-long" name="unité de mesure">
+                        <option value="1kg">1kg</option>
+                        <option value="5kg">5kg</option>
+                        <option value="25kg">25kg</option>
+                        <option value="50kg">50kg</option>
+                    </select><br>
+                    <label for="">quantité </label>
+                    <input id="qte-long" type="number" min="1" class="border-gray-300">
+                    <div class="mt-10 p-6 bg-blue-900 text-white rounded-lg text-center">
+                        <button onclick="calculerProduit('long')"
+                            class="bg-[#0066FF] text-white px-6 py-2.5 rounded-full font-semibold hover:bg-blue-700 transition-colors">
+                            Acheter
+                        </button>
+                        <h3 class="text-2xl">Total de votre commande : <span id="prix-total-long">0</span> FCFA</h3>
+                    </div>
+                </div>
+            </div>
+            <div class="grid grid-cols-1 mt-10 md:grid-cols-2 lg:grid-cols-3 gap-8">
+
+                <div
+                    class="bg-white p-8 rounded-2xl shadow-sm border border-gray-100 flex flex-col items-start transition-shadow hover:shadow-md">
+
+                    <h2 class="text-xl font-bold mb-3">Go Concurrency Patterns</h2>
+
+                    <p class="text-gray-600 mb-8 flex-grow">
+                        Test your understanding of Goroutines, channels, and concurrency patterns in Go.
+                    </p>
+
+                    <button
+                        class="bg-[#0066FF] text-white px-6 py-2.5 rounded-full font-semibold hover:bg-blue-700 transition-colors">
+                        Acheter
+                    </button>
+                </div>
+
+                <div
+                    class="bg-white p-8 rounded-2xl shadow-sm border border-gray-100 flex flex-col items-start transition-shadow hover:shadow-md">
+                    <h2 class="text-xl font-bold mb-3">Go Data Structures and Interfaces</h2>
+                    <p class="text-gray-600 mb-8 flex-grow">
+                        Assess your knowledge of slices, maps, structs, and interfaces in Go.
+                    </p>
+                    <button
+                        class="bg-[#0066FF] text-white px-6 py-2.5 rounded-full font-semibold hover:bg-blue-700 transition-colors">
+                        Acheter
+                    </button>
+                </div>
+
+                <div
+                    class="bg-white p-8 rounded-2xl shadow-sm border border-gray-100 flex flex-col items-start transition-shadow hover:shadow-md">
+                    <h2 class="text-xl font-bold mb-3">Go Error Handling</h2>
+                    <p class="text-gray-600 mb-8 flex-grow">
+                        Practice handling and propagating errors effectively in Go.
+                    </p>
+                    <button
+                        class="bg-[#0066FF] text-white px-6 py-2.5 rounded-full font-semibold hover:bg-blue-700 transition-colors">
+                        Acheter
+                    </button>
+                </div>
+            </div>
+            <div class="mt-10 max-w-xl mx-auto bg-white p-6 rounded-xl shadow-2xl border-t-8 border-blue-600">
+                <h3 class="text-2xl font-bold text-center text-gray-800 mb-6 underline">VOTRE FACTURE</h3>
+
+                <div id="recap-liste" class="space-y-3 mb-6 font-mono text-lg">
+                    <p class="text-gray-400 italic text-center">Aucun produit</p>
+                </div>
+
+                <div class="border-t-4 border-double border-gray-800 pt-4 flex justify-between items-center">
+                    <span class="text-xl font-black italic text-gray-700">TOTAL GÉNÉRAL :</span>
+                    <span class="text-3xl font-black text-red-600"><span id="grand-total">0</span> FCFA</span>
+                </div>
+
+                <button onclick="reinitialiserTout()"
+                    class="w-full mt-6 bg-gray-200 text-gray-700 py-2 rounded hover:bg-red-100 hover:text-red-600 transition">
+                    Vider le panier et recommencer
+                </button>
+            </div>
+        </main>
+    </div>
+
+    <!--<div class="sticky bottom-0 bg-white p-6 rounded-xl text-center">
+        <h1 class="text-3xl font-bold text-blue-600">
+            Hello Tailwind 🚀
+        </h1>
+
+        <p class="mt-2 text-gray-600">
+            Ma première page avec Tailwind CSS
+        </p>
+
+        <button class=" shadow-lg mt-4 bg-blue-500 text-white px-4 py-2 rounded-lg hover:bg-blue-700">
+            Cliquer
+        </button>
+    </div>-->
+    <script src="/HTML/js/utilisation.js"></script>
+</body>
+
+</html>

@@ -1,0 +1,13 @@
+{% load static %}
+<link rel="stylesheet" href="{% static 'css/style.css' %}">
+<div id="container">
+    <h1>Messages</h1>
+{% for message in messages %}
+    <div>
+        <div class="m-message">
+            <div class="m-text" style="color: {{ message.color }}">{{ message.text }}</div>
+            <div class="m-created-at">{{ message.created_at }}</div>
+        </div>
+        <div class="m-reader">{{ message.color }}</div>
+    </div>
+{% endfor %}
