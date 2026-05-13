@@ -1,0 +1,265 @@
+{% extends 'home/base.html' %}
+{% load static %}
+
+{% block title %}Inscription — CampusNest{% endblock %}
+
+{% block navbar %}{% endblock %}
+{% block footer %}{% endblock %}
+
+{% block content %}
+<div class="min-h-screen flex">
+
+  <!-- ═══════════════════════════════════════
+       PANNEAU GAUCHE  —  dynamique selon rôle
+  ═══════════════════════════════════════ -->
+  <div id="side-panel"
+       class="hidden lg:flex lg:w-2/5 relative overflow-hidden transition-all duration-700"
+       style="background: linear-gradient(135deg, #312e81 0%, #4338ca 50%, #6366f1 100%);">
+
+    <div class="absolute top-10 left-10 w-64 h-64 bg-white opacity-5 rounded-full blur-3xl"></div>
+    <div class="absolute bottom-10 right-5 w-80 h-80 bg-white opacity-5 rounded-full blur-3xl"></div>
+
+    <div class="relative z-10 flex flex-col justify-between p-12 text-white w-full">
+
+      <a href="{% url 'accueil' %}" class="flex items-center gap-3">
+        <span class="text-3xl">🏠</span>
+        <div>
+          <p class="font-bold text-xl">CampusNest</p>
+          <p id="side-subtitle" class="text-indigo-200 text-xs">IUT-FV Bandjoun</p>
+        </div>
+      </a>
+
+      <div>
+        <span id="side-badge"
+              class="inline-block bg-amber-400 text-gray-900 text-xs font-bold
+                     px-3 py-1 rounded-full uppercase tracking-wider mb-4">
+          Espace Étudiant
+        </span>
+        <h1 id="side-title"
+            class="font-heading text-4xl xl:text-5xl font-bold leading-tight mb-4">
+          Rejoignez des centaines<br>d'étudiants
+        </h1>
+        <p id="side-desc" class="text-indigo-200 text-base leading-relaxed">
+          Créez votre compte et accédez à toutes les chambres disponibles
+          autour de l'IUT-FV en quelques secondes.
+        </p>
+      </div>
+
+      <p class="text-indigo-300 text-xs">IUT de Fotso Victor — Bandjoun · Stage GL 2026</p>
+    </div>
+  </div>
+
+  <!-- ═══════════════════════════════════════
+       PANNEAU DROIT  —  formulaire unique
+  ═══════════════════════════════════════ -->
+  <div class="w-full lg:w-3/5 flex items-center justify-center bg-gray-50 px-6 py-12">
+    <div class="w-full max-w-lg">
+
+      <!-- Logo mobile -->
+      <a href="{% url 'accueil' %}" class="flex items-center gap-2 mb-8 lg:hidden">
+        <span class="text-2xl">🏠</span>
+        <span class="font-bold text-indigo-700 text-lg">CampusNest</span>
+      </a>
+
+      <h2 class="font-heading text-4xl font-bold text-gray-900 mb-1">Créer un compte</h2>
+      <p class="text-gray-500 text-sm mb-6">Choisissez votre type de compte.</p>
+
+      <!-- ── Sélecteur de rôle ── -->
+      <div class="flex rounded-xl border border-gray-200 bg-white p-1 mb-8 shadow-sm">
+        <button type="button" id="btn-etudiant"
+                onclick="switchRole('client')"
+                class="flex-1 flex items-center justify-center gap-2 py-2.5 px-4 rounded-lg
+                       text-sm font-semibold transition-all duration-300
+                       bg-indigo-600 text-white shadow">
+          🎓 Étudiant
+        </button>
+        <button type="button" id="btn-proprietaire"
+                onclick="switchRole('proprietaire')"
+                class="flex-1 flex items-center justify-center gap-2 py-2.5 px-4 rounded-lg
+                       text-sm font-semibold transition-all duration-300
+                       text-gray-500 hover:text-gray-700">
+          🏢 Propriétaire
+        </button>
+      </div>
+
+      <!-- Erreurs globales -->
+      {% if errors %}
+        <div class="bg-red-50 border border-red-200 rounded-xl p-4 mb-6">
+          <ul class="text-red-600 text-sm space-y-1">
+            {% for err in errors %}
+              <li>• {{ err }}</li>
+            {% endfor %}
+          </ul>
+        </div>
+      {% endif %}
+
+      <!-- ══════════════════════════════
+           FORMULAIRE UNIQUE
+      ══════════════════════════════ -->
+      <form method="POST" action="{% url 'inscription' %}" class="space-y-4">
+        {% csrf_token %}
+
+        <!-- Rôle transmis en hidden -->
+        <input type="hidden" name="role" id="role-input"
+               value="{{ form_data.role|default:'client' }}" />
+
+        <!-- ── [PROPRIÉTAIRE] Nom complet ── -->
+        <div id="field-nom-complet" class="hidden">
+          <label class="block text-sm font-medium text-gray-700 mb-1.5">Nom complet</label>
+          <input type="text" name="nom_complet"
+                 placeholder="Jean Dupont"
+                 value="{{ form_data.nom_complet|default:'' }}"
+                 class="input-field" />
+          {% if field_errors.nom_complet %}
+            <p class="text-red-500 text-xs mt-1">{{ field_errors.nom_complet }}</p>
+          {% endif %}
+        </div>
+
+        <!-- Nom d'utilisateur -->
+        <div>
+          <label class="block text-sm font-medium text-gray-700 mb-1.5">Nom d'utilisateur</label>
+          <input type="text" name="username"
+                 placeholder="votre_nom"
+                 value="{{ form_data.username|default:'' }}"
+                 required class="input-field" />
+          {% if field_errors.username %}
+            <p class="text-red-500 text-xs mt-1">{{ field_errors.username }}</p>
+          {% endif %}
+        </div>
+
+        <!-- Email -->
+        <div>
+          <label class="block text-sm font-medium text-gray-700 mb-1.5">Adresse e-mail</label>
+          <input type="email" name="email"
+                 placeholder="vous@iutfv.cm"
+                 value="{{ form_data.email|default:'' }}"
+                 required class="input-field" />
+          {% if field_errors.email %}
+            <p class="text-red-500 text-xs mt-1">{{ field_errors.email }}</p>
+          {% endif %}
+        </div>
+
+        <!-- Téléphone -->
+        <div>
+          <label class="block text-sm font-medium text-gray-700 mb-1.5">Téléphone</label>
+          <input type="tel" name="telephone"
+                 placeholder="+237 6XX XXX XXX"
+                 value="{{ form_data.telephone|default:'' }}"
+                 class="input-field" />
+        </div>
+
+        <!-- ── [ÉTUDIANT] Filière + Niveau ── -->
+        <div id="fields-etudiant" class="grid grid-cols-2 gap-4">
+          <div>
+            <label class="block text-sm font-medium text-gray-700 mb-1.5">Filière</label>
+            <input type="text" name="filiere"
+                   placeholder="ex: Génie Logiciel"
+                   value="{{ form_data.filiere|default:'' }}"
+                   class="input-field" />
+          </div>
+          <div>
+            <label class="block text-sm font-medium text-gray-700 mb-1.5">Niveau</label>
+            <input type="text" name="niveau"
+                   placeholder="ex: DUT1"
+                   value="{{ form_data.niveau|default:'' }}"
+                   class="input-field" />
+          </div>
+        </div>
+
+        <!-- Mot de passe -->
+        <div>
+          <label class="block text-sm font-medium text-gray-700 mb-1.5">Mot de passe</label>
+          <input type="password" name="password1"
+                 placeholder="••••••••••"
+                 required class="input-field" />
+          {% if field_errors.password1 %}
+            <p class="text-red-500 text-xs mt-1">{{ field_errors.password1 }}</p>
+          {% endif %}
+        </div>
+
+        <!-- Confirmation -->
+        <div>
+          <label class="block text-sm font-medium text-gray-700 mb-1.5">
+            Confirmer le mot de passe
+          </label>
+          <input type="password" name="password2"
+                 placeholder="••••••••••"
+                 required class="input-field" />
+          {% if field_errors.password2 %}
+            <p class="text-red-500 text-xs mt-1">{{ field_errors.password2 }}</p>
+          {% endif %}
+        </div>
+
+        <button type="submit" id="submit-btn" class="btn-primary mt-2">
+          Créer mon compte étudiant
+        </button>
+      </form>
+
+      <p class="text-sm text-gray-500 text-center mt-6">
+        Déjà un compte ?
+        <a href="#"
+           class="text-indigo-600 font-semibold hover:text-indigo-800">
+          Se connecter
+        </a>
+      </p>
+
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════
+     SCRIPT — bascule entre rôles
+═══════════════════════════════════════ -->
+<script>
+const ROLE_CONFIG = {
+  client: {
+    gradient : 'linear-gradient(135deg, #312e81 0%, #4338ca 50%, #6366f1 100%)',
+    badge    : 'Espace Étudiant',
+    title    : "Rejoignez des centaines<br>d'étudiants",
+    desc     : "Créez votre compte et accédez à toutes les chambres disponibles autour de l'IUT-FV en quelques secondes.",
+    btnLabel : 'Créer mon compte étudiant',
+  },
+  proprietaire: {
+    gradient : 'linear-gradient(135deg, #1e3a5f 0%, #1d4ed8 50%, #3b82f6 100%)',
+    badge    : 'Espace Propriétaire',
+    title    : 'Publiez vos chambres,<br>trouvez vos locataires',
+    desc     : 'Gérez vos cités et chambres en ligne, recevez des réservations et des paiements Mobile Money directement.',
+    btnLabel : 'Créer mon compte propriétaire',
+  },
+};
+
+function switchRole(role) {
+  const cfg      = ROLE_CONFIG[role];
+  const isClient = role === 'client';
+
+  document.getElementById('role-input').value            = role;
+  document.getElementById('side-panel').style.background = cfg.gradient;
+  document.getElementById('side-badge').textContent      = cfg.badge;
+  document.getElementById('side-title').innerHTML        = cfg.title;
+  document.getElementById('side-desc').textContent       = cfg.desc;
+  document.getElementById('submit-btn').textContent      = cfg.btnLabel;
+
+  document.getElementById('fields-etudiant').classList.toggle('hidden', !isClient);
+  document.getElementById('field-nom-complet').classList.toggle('hidden', isClient);
+
+  const btnEtu  = document.getElementById('btn-etudiant');
+  const btnProp = document.getElementById('btn-proprietaire');
+
+  [btnEtu, btnProp].forEach(b =>
+    b.classList.remove('bg-indigo-600', 'text-white', 'shadow', 'text-gray-500', 'hover:text-gray-700')
+  );
+  if (isClient) {
+    btnEtu.classList.add('bg-indigo-600', 'text-white', 'shadow');
+    btnProp.classList.add('text-gray-500', 'hover:text-gray-700');
+  } else {
+    btnProp.classList.add('bg-indigo-600', 'text-white', 'shadow');
+    btnEtu.classList.add('text-gray-500', 'hover:text-gray-700');
+  }
+}
+
+// Restaure l'onglet actif si la page revient avec des erreurs
+document.addEventListener('DOMContentLoaded', () =>
+  switchRole(document.getElementById('role-input').value || 'client')
+);
+</script>
+{% endblock %}

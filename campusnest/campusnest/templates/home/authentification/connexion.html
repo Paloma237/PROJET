@@ -1,0 +1,164 @@
+{% extends 'home/base.html' %}
+{% load static %}
+
+{% block title %}Connexion — CampusNest{% endblock %}
+
+{% block navbar %}{% endblock %}
+{% block footer %}{% endblock %}
+
+{% block content %}
+<div class="min-h-screen flex">
+
+  <!-- ── Panneau gauche : Hero dégradé ── -->
+  <div class="hidden lg:flex lg:w-1/2 relative overflow-hidden"
+       style="background: linear-gradient(135deg, #312e81 0%, #4338ca 40%, #6366f1 75%, #818cf8 100%);">
+
+    <!-- Cercles décoratifs -->
+    <div class="absolute top-20 left-10 w-72 h-72 bg-white opacity-5 rounded-full blur-3xl"></div>
+    <div class="absolute bottom-20 right-10 w-96 h-96 bg-white opacity-5 rounded-full blur-3xl"></div>
+
+    <div class="relative z-10 flex flex-col justify-between p-14 text-white w-full">
+
+      <!-- Logo -->
+      <div class="flex items-center gap-3">
+        <span class="text-3xl">🏠</span>
+        <div>
+          <p class="font-bold text-xl tracking-tight">CampusNest</p>
+          <p class="text-indigo-200 text-xs">IUT-FV Bandjoun</p>
+        </div>
+      </div>
+
+      <!-- Texte hero -->
+      <div>
+        <p class="text-indigo-200 text-sm font-medium uppercase tracking-widest mb-4">
+          CAMPUSNEST IUT-FV
+        </p>
+        <h1 class="font-heading text-5xl xl:text-6xl font-bold leading-tight mb-6">
+          Votre logement<br>
+          <span class="text-amber-400">étudiant</span><br>
+          en quelques clics
+        </h1>
+        <p class="text-indigo-100 text-lg leading-relaxed max-w-md mb-10">
+          Trouvez, comparez et réservez votre chambre autour de l'IUT-FV sans vous déplacer.
+        </p>
+
+        <!-- Avantages -->
+        <div class="flex flex-col gap-3">
+          {% for avantage in avantages|default:"Photos & prix en ligne,Paiement Mobile Money,Réservation sécurisée" %}
+          {% endfor %}
+          <div class="flex items-center gap-3">
+            <span class="w-6 h-6 rounded-full bg-amber-400 flex items-center justify-center
+                         text-xs text-gray-900 font-bold flex-shrink-0">✓</span>
+            <span class="text-indigo-100 text-sm">Photos & prix en ligne</span>
+          </div>
+          <div class="flex items-center gap-3">
+            <span class="w-6 h-6 rounded-full bg-amber-400 flex items-center justify-center
+                         text-xs text-gray-900 font-bold flex-shrink-0">✓</span>
+            <span class="text-indigo-100 text-sm">Paiement Mobile Money</span>
+          </div>
+          <div class="flex items-center gap-3">
+            <span class="w-6 h-6 rounded-full bg-amber-400 flex items-center justify-center
+                         text-xs text-gray-900 font-bold flex-shrink-0">✓</span>
+            <span class="text-indigo-100 text-sm">Réservation sécurisée</span>
+          </div>
+        </div>
+      </div>
+
+      <p class="text-indigo-300 text-xs">IUT de Fotso Victor — Bandjoun · Stage GL 2026</p>
+    </div>
+  </div>
+
+  <!-- ── Panneau droit : Formulaire ── -->
+  <div class="w-full lg:w-1/2 flex items-center justify-center bg-gray-50 px-6 py-12">
+    <div class="w-full max-w-md">
+
+      <!-- Logo mobile -->
+      <a href="{% url 'accueil' %}" class="flex items-center gap-2 mb-8 lg:hidden">
+        <span class="text-2xl">🏠</span>
+        <span class="font-bold text-indigo-700 text-lg">CampusNest</span>
+      </a>
+
+      <h2 class="font-heading text-4xl font-bold text-gray-900 mb-1">Connexion</h2>
+      <p class="text-gray-500 text-sm mb-8">Bienvenue ! Connectez-vous à votre compte.</p>
+
+      <form method="POST" action="{% url 'connexion' %}" class="space-y-5">
+        {% csrf_token %}
+
+        <!-- Email -->
+        <div>
+          <label class="block text-sm font-medium text-gray-700 mb-1.5">
+            Adresse e-mail
+          </label>
+          <input
+            type="email"
+            name="email"
+            placeholder="client@iutfv.cm"
+            value="{{ form.email.value|default:'' }}"
+            required
+            class="input-field {% if form.email.errors %}border-red-400 focus:ring-red-400{% endif %}"
+          />
+          {% if form.email.errors %}
+            <p class="text-red-500 text-xs mt-1">{{ form.email.errors.0 }}</p>
+          {% endif %}
+        </div>
+
+        <!-- Mot de passe -->
+        <div>
+          <div class="flex justify-between items-center mb-1.5">
+            <label class="text-sm font-medium text-gray-700">Mot de passe</label>
+            <a href="#"
+               class="text-xs text-indigo-600 hover:text-indigo-800 font-medium">
+              Mot de passe oublié ?
+            </a>
+          </div>
+          <input
+            type="password"
+            name="password"
+            placeholder="••••••••••"
+            required
+            class="input-field {% if form.password.errors %}border-red-400 focus:ring-red-400{% endif %}"
+          />
+        </div>
+
+        <button type="submit" class="btn-primary mt-2">
+          Se connecter
+        </button>
+      </form>
+
+      <!-- Séparateur + inscription -->
+      <div class="mt-6 text-center">
+        <p class="text-sm text-gray-500 mb-4">
+          Pas encore de compte ?
+          <a href="#"
+             class="text-indigo-600 font-semibold hover:text-indigo-800">
+            S'inscrire
+          </a>
+        </p>
+
+        <div class="flex items-center gap-3 mb-4">
+          <div class="flex-1 h-px bg-gray-200"></div>
+          <span class="text-xs text-gray-400">ou s'inscrire comme</span>
+          <div class="flex-1 h-px bg-gray-200"></div>
+        </div>
+
+        <div class="grid grid-cols-2 gap-3">
+          <a href="#"
+             class="flex items-center justify-center gap-2 border-2 border-gray-200
+                    hover:border-indigo-500 hover:bg-indigo-50 rounded-xl py-3 px-4
+                    text-sm font-medium text-gray-700 transition-all duration-200">
+            🎓 Étudiant
+          </a>
+          <a href="#"
+             class="flex items-center justify-center gap-2 border-2 border-gray-200
+                    hover:border-indigo-500 hover:bg-indigo-50 rounded-xl py-3 px-4
+                    text-sm font-medium text-gray-700 transition-all duration-200">
+            🏢 Propriétaire
+          </a>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+</div>
+{% endblock %}

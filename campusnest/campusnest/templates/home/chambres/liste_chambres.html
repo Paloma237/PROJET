@@ -1,0 +1,99 @@
+{% extends 'home/base.html' %}
+
+{% block title %}Logements — CampusNest{% endblock %}
+
+{% block content %}
+<div class="max-w-6xl mx-auto px-4 py-12">
+
+  <!-- En-tête -->
+  <div class="mb-10">
+    <h1 class="font-heading text-4xl font-bold text-gray-900 mb-2">
+      Logements disponibles
+    </h1>
+    <p class="text-gray-500">
+      {{ chambres.count }} chambre{{ chambres.count|pluralize }} disponible{{ chambres.count|pluralize }}
+    </p>
+  </div>
+
+  {% if chambres %}
+  <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+    {% for chambre in chambres %}
+    <div class="bg-white rounded-2xl border border-gray-100 overflow-hidden
+                hover:shadow-xl transition-shadow duration-300">
+
+      <div class="h-48 bg-gradient-to-br from-indigo-100 to-indigo-200
+                  flex items-center justify-center relative">
+        {% with chambre.photos.first as photo %}
+          {% if photo %}
+            <img src="{{ photo.image.url }}" alt="{{ chambre.titre }}"
+                 class="w-full h-full object-cover" />
+          {% else %}
+            <span class="text-5xl opacity-40">🏠</span>
+          {% endif %}
+        {% endwith %}
+        <span class="absolute top-3 right-3 bg-green-500 text-white
+                     text-xs font-bold px-3 py-1 rounded-full">
+          Disponible
+        </span>
+        <span class="absolute top-3 left-3 bg-white text-gray-700
+                     text-xs font-medium px-3 py-1 rounded-full shadow">
+          {{ chambre.get_type_chambre_display }}
+        </span>
+      </div>
+
+      <div class="p-5">
+        <h3 class="font-semibold text-gray-900 text-base mb-1 truncate">
+          {{ chambre.titre }}
+        </h3>
+        <p class="text-gray-500 text-sm mb-3">
+          📍 {{ chambre.cite.quartier }}, {{ chambre.cite.ville }}
+        </p>
+
+        <div class="flex gap-2 flex-wrap mb-4">
+          {% if chambre.wifi %}
+          <span class="text-xs bg-indigo-50 text-indigo-700 px-2 py-1 rounded-lg">📶 Wifi</span>
+          {% endif %}
+          {% if chambre.salle_de_bain %}
+          <span class="text-xs bg-indigo-50 text-indigo-700 px-2 py-1 rounded-lg">🚿 Salle de bain</span>
+          {% endif %}
+          {% if chambre.cuisine %}
+          <span class="text-xs bg-indigo-50 text-indigo-700 px-2 py-1 rounded-lg">🍳 Cuisine</span>
+          {% endif %}
+          {% if chambre.superficie %}
+          <span class="text-xs bg-gray-50 text-gray-600 px-2 py-1 rounded-lg">
+            📐 {{ chambre.superficie }} m²
+          </span>
+          {% endif %}
+        </div>
+
+        <div class="flex items-center justify-between">
+          <div>
+            <span class="text-xl font-bold text-indigo-700">
+              {{ chambre.prix_mensuel|floatformat:0 }} FCFA
+            </span>
+            <span class="text-gray-400 text-xs">/mois</span>
+          </div>
+          <a href="{% url 'detail_chambre' chambre.pk %}"
+             class="bg-indigo-700 hover:bg-indigo-800 text-white text-sm
+                    font-medium px-4 py-2 rounded-xl transition-colors">
+            Voir →
+          </a>
+        </div>
+      </div>
+    </div>
+    {% endfor %}
+  </div>
+
+  {% else %}
+  <div class="text-center py-24">
+    <span class="text-6xl mb-4 block">🏠</span>
+    <p class="text-gray-500 text-lg mb-2">Aucune chambre disponible pour l'instant.</p>
+    <a href="{% url 'inscription_proprietaire' %}"
+       class="text-indigo-600 font-semibold hover:text-indigo-800">
+      Vous êtes propriétaire ? Publiez votre première chambre →
+    </a>
+  </div>
+  {% endif %}
+
+</div>
+{% endblock %}
